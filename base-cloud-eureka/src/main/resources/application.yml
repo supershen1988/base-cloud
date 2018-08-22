@@ -1,0 +1,20 @@
+server:
+  port: 1001
+  
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://user:ysuser@localhost:${server.port}/eureka/
+  server:
+    enable-self-preservation: false                #关闭自我保护模式设为false
+    eviction-interval-timer-in-ms: 10000           #续期时间，即扫描失效服务的间隔时间（缺省为60*1000ms） 设置为10秒
+security:
+  basic:
+    enabled: true                                  #开启基于basic的认证
+  user:
+    name: user
+    password: ysuser

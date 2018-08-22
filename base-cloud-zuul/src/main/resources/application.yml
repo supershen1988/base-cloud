@@ -1,0 +1,56 @@
+server:
+  port: 1002
+spring:
+  application:
+    name: base-cloud-zuul
+  redis:
+    host: localhost
+    port: 6379
+  session:
+    store-type: redis
+    
+eureka:
+  client:
+    service-url:
+      defaultZone: http://user:ysuser@localhost:1001/eureka/
+  instance:
+    lease-renewal-interval-in-seconds: 5      # 心跳时间，即服务续约间隔时间（缺省为30s）
+    lease-expiration-duration-in-seconds: 10  # 发呆时间，即服务续约到期时间（缺省为90s）
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 5000                             # 熔断超时时间设置成5秒,为上传配置此项
+ribbon:
+  ConnectTimeout: 3000                                              # 为上传配置此项
+  ReadTimeout: 60000                                                # 为上传配置此项
+zuul:
+  routes:
+    user-client:
+      path: /client/**
+      service-id: ys-cloud-eur-cli
+      sensitive-headers: Cookie,Set-Cookie
+    user-service:
+      path: /user-service/**
+      service-id: ys-cloud-user-service
+      sensitive-headers: Cookie,Set-Cookie                          #设置敏感header，默认为Cookie,Set-Cookie,Authorization，由于部分微服务是通过springsecurity Authorization实现的登录验证，所以将Authorization从敏感header中去掉
+    user-auth:                                                      #此处配置认证中心路由跳转，如果需改此路由名称，请同时更改ApiZuulFilter中，认证登录过滤代码
+      path: /user-auth/**
+      service-id: ys-cloud-auth
+      sensitive-headers: Cookie,Set-Cookie
+    system-service:
+      path: /system-service/**
+      service-id: ys-cloud-system-service
+      sensitive-headers: Cookie,Set-Cookie
+    file-upload:
+      path: /upload/**
+      service-id: ys-cloud-upload
+      sensitive-headers: Cookie,Set-Cookie
+
+#logging
+logging:
+  level:
+    com.netflix: DEBUG
