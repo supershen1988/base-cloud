@@ -51,7 +51,6 @@ public class SearchFilter {
 			if(names.length >2){
 				for(int i = 2; i < names.length; i ++){
 					filedName = filedName + "_" + names[i];
-					i++;
 				}
 			}
 			Operator operator = Operator.valueOf(names[0]);
